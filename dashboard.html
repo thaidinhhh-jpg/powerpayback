@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Lead Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .wrap { width: 100%; max-width: 980px; margin: 0 auto; padding: 0 16px 40px; }
+  .bar-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 6px 0 14px; }
+  .bar-top h1 { margin: 0; flex: 1 1 200px; }
+  .chip { border: 1.5px solid var(--line); background: #fff; border-radius: 99px; padding: 7px 14px; font: inherit; font-size: 14px; cursor: pointer; color: var(--ink); }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .mini { border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 12px; font: inherit; font-size: 14px; cursor: pointer; color: var(--ink); }
+  .counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .lead { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .lead-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .lead-head .nm { font-weight: 700; font-size: 17px; flex: 1 1 160px; }
+  .badge { font-size: 12.5px; font-weight: 700; color: #fff; border-radius: 99px; padding: 3px 10px; }
+  .badge.Hot { background: var(--hot); } .badge.Warm { background: var(--warm); } .badge.Cold { background: var(--cold); }
+  .lead a { color: var(--green); font-weight: 600; text-decoration: none; }
+  .lead .meta { color: var(--muted); font-size: 14px; margin: 6px 0 0; }
+  .lead .facts { font-size: 14px; margin: 6px 0 0; }
+  .lead-foot { display: grid; grid-template-columns: 150px 1fr; gap: 8px; margin-top: 10px; }
+  .lead-foot select, .lead-foot input { padding: 9px 10px; font-size: 14px; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 16px; }
+  .mode { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  @media (max-width: 560px) { .counts { grid-template-columns: 1fr 1fr; } .lead-foot { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="top" style="max-width:980px">
+  <div class="brand"><span class="sun" aria-hidden="true"></span><span id="brandName"></span></div>
+  <div class="top-note"><a href="index.html" style="color:inherit">Open the quiz</a></div>
+</header>
+<div class="wrap">
+  <div class="bar-top">
+    <h1>Leads</h1>
+    <button class="mini" id="refresh" type="button">Refresh</button>
+    <button class="mini" id="export" type="button">Export CSV</button>
+  </div>
+  <p class="mode" id="mode"></p>
+  <div class="counts" id="counts"></div>
+  <div class="bar-top" id="filters"></div>
+  <div id="list"></div>
+</div>
+<script src="config.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
