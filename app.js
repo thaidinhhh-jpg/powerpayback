@@ -343,7 +343,8 @@
 
     var consent = el("input", { type: "checkbox", id: "f_consent" });
     f.appendChild(el("label", { class: "consent", for: "f_consent" }, [consent,
-      el("span", { text: "I agree to " + C.company + " and its installation partner contacting me by phone, SMS and email about my solar and battery quote. I can opt out at any time." })]));
+      el("span", {}, ["I agree to " + C.company + " and its installation partner contacting me by phone, SMS and email about my solar and battery quote. I can opt out at any time. See our ",
+        el("a", { href: "privacy.html", target: "_blank", rel: "noopener", text: "privacy policy" }), "."])]));
 
     var err = el("p", { class: "err" });
     var btn = el("button", { class: "btn", type: "submit", text: est ? "Get my exact quote" : "Request my proposal" });

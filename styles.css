@@ -37,6 +37,13 @@ body {
 }
 .foot { max-width: 648px; margin: 0 auto; padding: 16px 16px 28px; color: var(--muted); font-size: 12.5px; }
 .foot p { margin: 0; }
+.foot p + p { margin-top: 8px; }
+.foot a, .consent a, .top-note a, .policy a { color: var(--green); }
+.policy h1 { margin: 0 0 2px; font-size: 26px; }
+.policy h2 { margin: 24px 0 6px; font-size: 18px; }
+.policy p { margin: 8px 0; }
+.policy ul { margin: 8px 0; padding-left: 20px; }
+.policy li { margin: 5px 0; }
 
 .progress { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; margin-bottom: 18px; }
 .progress > i { display: block; height: 100%; background: var(--green); border-radius: 99px; transition: width .25s; }
