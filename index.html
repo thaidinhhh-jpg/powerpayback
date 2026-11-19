@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solar &amp; Battery Savings Check | Victoria</title>
 <meta name="description" content="A 60-second check for Victorian homes: see what solar and a battery could save you, and which rebates you may be able to claim.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PowerPayback">
+<meta property="og:title" content="See what solar and a battery could save you">
+<meta property="og:description" content="A free 60-second savings check for Victorian homes. See your estimated savings, rebates and price before you talk to anyone.">
+<meta property="og:url" content="https://getpowerpayback.com/">
+<meta property="og:image" content="https://getpowerpayback.com/assets/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,7 +23,73 @@
   <div class="top-note">Victoria · 60-second check</div>
 </header>
 
+<!-- Shown to people who arrive without an ad tag (for example from the Facebook Page). -->
+<section id="hero" class="home-hero" aria-label="About PowerPayback">
+  <img src="assets/hero.jpg" width="1040" height="650" alt="A single-storey Victorian brick home with solar panels on the roof and a battery on the wall">
+  <div class="home-hero-copy">
+    <p class="kicker">Free for Victorian homes</p>
+    <p class="home-title">See what solar and a battery could save your home</p>
+    <p class="home-sub">Answer a few questions and see your estimated savings, rebates and price in about 60 seconds. You see the numbers before you talk to anyone.</p>
+    <a class="btn" href="#app">Start the free check</a>
+  </div>
+</section>
+
 <main id="app" class="card" aria-live="polite"></main>
+
+<!-- Shown under the first question, hidden once the quiz is under way. -->
+<div id="info" class="info">
+  <section class="panel">
+    <h2>How it works</h2>
+    <ol class="how">
+      <li><b>Answer a few questions</b><span>About your home, your roof and your power bill. It takes about 60 seconds.</span></li>
+      <li><b>See your numbers</b><span>Estimated yearly savings, the rebates you may be able to claim, and an indicative price.</span></li>
+      <li><b>Ask for a call if you like them</b><span><span class="salesName">A specialist</span> confirms your details and arranges a written quote. No obligation.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2>What the check covers</h2>
+    <ul class="ticks">
+      <li>Solar and battery sizes suited to your bill</li>
+      <li>The federal battery discount and federal solar discount</li>
+      <li>The Solar Victoria rebate and interest-free loan, if you may be eligible</li>
+      <li>How long the system could take to pay for itself</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Common questions</h2>
+    <details>
+      <summary>Is it really free?</summary>
+      <p>Yes. The check is free and there is no obligation to buy anything.</p>
+    </details>
+    <details>
+      <summary>Will I get sales calls?</summary>
+      <p>Only if you ask for a quote at the end. You can see your estimate without entering any contact details. If you do ask for a quote, your details go only to the solar retailer and installer who would do the job, and you can opt out at any time. See our <a href="privacy.html">privacy policy</a>.</p>
+    </details>
+    <details>
+      <summary>How accurate are the numbers?</summary>
+      <p>They are estimates, based on typical Victorian electricity prices and average Melbourne sunshine. Your firm price comes in a written quote after your roof and switchboard are checked.</p>
+    </details>
+    <details>
+      <summary>What changes on 1 January 2027?</summary>
+      <p>The federal battery discount steps down on 1 January 2027. It is based on the date the battery is installed, not the date it is ordered.</p>
+    </details>
+    <details>
+      <summary>I already have solar. Can I add just a battery?</summary>
+      <p>Yes. Tell the check you already have panels and it will estimate what a battery alone could save you.</p>
+    </details>
+    <details>
+      <summary>Which areas do you cover?</summary>
+      <p>Homes in Victoria.</p>
+    </details>
+  </section>
+
+  <section class="panel contact" id="contact" hidden>
+    <h2>Prefer to talk?</h2>
+    <p>Call <span class="salesName">us</span> on <a id="phoneLink" href="#"></a>.</p>
+  </section>
+</div>
 
 <footer class="foot">
   <p>Estimates only. They are based on typical Victorian electricity prices and average Melbourne sunshine, not on a site inspection. Rebates depend on eligibility and can change. Your written quote is the figure that counts.</p>
@@ -23,5 +99,33 @@
 <script src="config.js"></script>
 <script src="calc.js"></script>
 <script src="app.js"></script>
+<script>
+(function () {
+  var C = window.SL_CONFIG || {};
+  var app = document.getElementById("app");
+  // Ad links carry a tag (?fb-deadline, ?fb-solar) and go straight to the quiz.
+  if (!location.search) document.body.classList.add("home");
+
+  if (C.salesName) {
+    var names = document.querySelectorAll(".salesName");
+    for (var i = 0; i < names.length; i++) names[i].textContent = C.salesName;
+  }
+  if (C.phone) {
+    var a = document.getElementById("phoneLink");
+    a.textContent = C.phone;
+    a.href = "tel:" + C.phone.replace(/[^\d+]/g, "");
+    document.getElementById("contact").hidden = false;
+  }
+
+  // Hide the hero and info sections once someone is past the first question.
+  var h = app.querySelector("h1");
+  var first = h ? h.textContent : "";
+  function sync() {
+    var now = app.querySelector("h1");
+    document.body.classList.toggle("in-quiz", !now || now.textContent !== first);
+  }
+  new MutationObserver(sync).observe(app, { childList: true });
+})();
+</script>
 </body>
 </html>
