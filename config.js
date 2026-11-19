@@ -6,7 +6,7 @@
 window.SL_CONFIG = {
   company: "PowerPayback",
   phone: "0421 926 644",           // shown on the thank-you page, e.g. "03 9000 0000"
-  salesName: "",        // e.g. "Sam" -> "Sam will call you"
+  salesName: "Thomas",       // e.g. "Sam" -> "Sam will call you"
   privacyEmail: "",     // shown on the privacy policy page for requests and complaints
 
   // Paste the Google Apps Script web-app URL here to go live (see SETUP.md).
