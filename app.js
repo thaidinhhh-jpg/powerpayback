@@ -132,8 +132,25 @@
     if (trail.length > 1) app.appendChild(el("button", { class: "back", type: "button", onclick: back, text: "← Back" }));
   }
 
+  /* ---------- anonymous step counts ----------
+     Records which quiz step a visit reached, so we can see where people stop.
+     Sends the step name, the ad tag and a random number made for this page view.
+     No answers, no contact details, no cookie, nothing saved in the browser. */
+  var visit = Math.random().toString(36).slice(2, 12);
+  var seen = {};
+  function track(step) {
+    if (!C.webhookUrl || seen[step]) return;
+    seen[step] = true;
+    try {
+      fetch(C.webhookUrl, { method: "POST", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "step", sid: visit, step: step, source: location.search.replace(/^\?/, "").slice(0, 50) }) })
+        .catch(function () {});
+    } catch (e) { /* counting must never break the quiz */ }
+  }
+
   function render() {
     var id = trail[trail.length - 1];
+    track(id);
     if (id === "result") return renderResult();
     if (id === "thanks") return renderThanks();
     var s = STEPS.filter(function (x) { return x.id === id; })[0];
@@ -349,6 +366,7 @@
     var err = el("p", { class: "err" });
     var btn = el("button", { class: "btn", type: "submit", text: est ? "Get my exact quote" : "Request my proposal" });
     f.appendChild(err); f.appendChild(btn);
+    f.addEventListener("focusin", function () { track("form-started"); });
 
     f.addEventListener("submit", function (e) {
       e.preventDefault();
