@@ -136,6 +136,9 @@
      Records which quiz step a visit reached, so we can see where people stop.
      Sends the step name, the ad tag and a random number made for this page view.
      No answers, no contact details, no cookie, nothing saved in the browser. */
+  // The ad tag is the first part of the link's query (?fb-deadline). Anything Facebook
+  // adds after it, such as its click ID, is dropped.
+  function adTag() { return location.search.replace(/^\?/, "").split("&")[0].slice(0, 50); }
   var visit = Math.random().toString(36).slice(2, 12);
   var seen = {};
   function track(step) {
@@ -143,7 +146,7 @@
     seen[step] = true;
     try {
       fetch(C.webhookUrl, { method: "POST", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "step", sid: visit, step: step, source: location.search.replace(/^\?/, "").slice(0, 50) }) })
+        body: JSON.stringify({ action: "step", sid: visit, step: step, source: adTag() }) })
         .catch(function () {});
     } catch (e) { /* counting must never break the quiz */ }
   }
@@ -402,7 +405,7 @@
         estSolarKw: est ? est.solarKw : "", estBatteryKwh: est ? est.batteryKwh : "",
         estSavings: est ? Math.round(est.savings) : "", estNetCost: est ? est.netCost : "",
         estPayback: est && est.payback ? est.payback : "",
-        consent: "yes", source: location.search.replace(/^\?/, "").slice(0, 200),
+        consent: "yes", source: adTag(),
         status: "New", notes: "", website: hp.value
       };
       saveLead(lead).then(function () { trail.push("thanks"); render(); })
