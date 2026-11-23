@@ -106,6 +106,28 @@
   // Ad links carry a tag (?fb-deadline, ?fb-solar) and go straight to the quiz.
   if (!location.search) document.body.classList.add("home");
 
+  // Ad visitors get a short opening above the first question that matches the ad they tapped.
+  // "test-deadline" and "test-solar" show the same openings for checking.
+  var tag = location.search.replace(/^\?/, "").split("&")[0].replace(/^test-/, "fb-");
+  var step = C.rebates && C.rebates.batteryStepDown;
+  var stepAhead = step && new Date(step.date + "T00:00:00") > new Date();
+  var noDetails = " You see your numbers before you give any contact details.";
+  var openings = {
+    "fb-deadline": stepAhead && {
+      title: "The battery discount drops on " + step.label,
+      sub: "See what a battery could save your home, and what it would cost at today's discount." + noDetails },
+    "fb-solar": {
+      title: "Got solar? See what a battery would add",
+      sub: "Use your spare solar power at night. See what a battery could save you, and what it would cost after the discounts." + noDetails }
+  };
+  var opening = openings[tag];
+  if (opening) {
+    document.body.classList.add("ad");
+    document.querySelector(".kicker").textContent = "Free 60-second savings check";
+    document.querySelector(".home-title").textContent = opening.title;
+    document.querySelector(".home-sub").textContent = opening.sub;
+  }
+
   if (C.salesName) {
     var names = document.querySelectorAll(".salesName");
     for (var i = 0; i < names.length; i++) names[i].textContent = C.salesName;

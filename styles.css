@@ -150,7 +150,7 @@ table.cost tr.total td { border-bottom: 0; font-weight: 800; font-size: 17px; pa
 html { scroll-behavior: smooth; }
 #app { scroll-margin-top: 12px; }
 .home-hero { display: none; }
-body.home .home-hero {
+body.home .home-hero, body.ad .home-hero {
   display: block; width: calc(100% - 32px); max-width: 648px; margin: 8px auto 14px;
   background: var(--green-dark); color: #fff; border-radius: var(--radius); overflow: hidden;
   box-shadow: 0 6px 24px rgba(16,38,31,.10);
@@ -166,6 +166,13 @@ body.home .home-hero {
 a.btn { text-align: center; text-decoration: none; }
 .home-hero .btn { background: var(--sun); color: #2c2000; }
 .home-hero .btn:hover { background: #ffc93c; }
+/* Ad visitors: shorter photo and no button, so the first question sits on the first screen. */
+body.ad .home-hero { margin-bottom: 10px; }
+body.ad .home-hero img { aspect-ratio: 5 / 2; }
+body.ad .home-hero .btn { display: none; }
+body.ad .home-hero-copy { padding: 14px 18px 16px; }
+body.ad .home-title { font-size: 22px; }
+body.ad .home-sub { font-size: 15px; }
 
 .info { width: calc(100% - 32px); max-width: 648px; margin: 14px auto 0; display: grid; gap: 14px; }
 .panel {
