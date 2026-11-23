@@ -118,12 +118,17 @@
       sub: "See what a battery could save your home, and what it would cost at today's discount." + noDetails },
     "fb-solar": {
       title: "Got solar? See what a battery would add",
-      sub: "Use your spare solar power at night. See what a battery could save you, and what it would cost after the discounts." + noDetails }
+      sub: "Use your spare solar power at night. See what a battery could save you, and what it would cost after the discounts." + noDetails },
+    "fb-callback": {
+      kicker: "Free call back for Victorian homes",
+      title: "Thinking about solar or a battery?",
+      sub: "Leave your number and " + (C.salesName || "a local solar specialist") + " will call you with straight answers on savings, rebates and price. No obligation." }
   };
   var opening = openings[tag];
   if (opening) {
     document.body.classList.add("ad");
-    document.querySelector(".kicker").textContent = "Free 60-second savings check";
+    if (tag === "fb-callback") document.body.classList.add("callback");
+    document.querySelector(".kicker").textContent = opening.kicker || "Free 60-second savings check";
     document.querySelector(".home-title").textContent = opening.title;
     document.querySelector(".home-sub").textContent = opening.sub;
   }

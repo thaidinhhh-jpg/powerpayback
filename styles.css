@@ -173,6 +173,9 @@ body.ad .home-hero .btn { display: none; }
 body.ad .home-hero-copy { padding: 14px 18px 16px; }
 body.ad .home-title { font-size: 22px; }
 body.ad .home-sub { font-size: 15px; }
+/* Call-back page: the quiz explainers do not apply. */
+body.callback .info .panel:nth-child(1), body.callback .info .panel:nth-child(2) { display: none; }
+body.callback .top-note { display: none; }
 
 .info { width: calc(100% - 32px); max-width: 648px; margin: 14px auto 0; display: grid; gap: 14px; }
 .panel {

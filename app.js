@@ -417,6 +417,81 @@
     app.appendChild(f);
   }
 
+  /* ---------- call-back request (no quiz) ----------
+     Shown instead of the quiz when the link is tagged ?fb-callback. */
+  function renderCallback() {
+    app.innerHTML = "";
+    var f = el("form", { novalidate: "novalidate" });
+    f.appendChild(el("h1", { text: "Request a call back" }));
+    f.appendChild(el("p", { class: "sub", text: (C.salesName || "A local solar specialist") +
+      " will call you about solar and a battery for your home. No obligation." }));
+
+    var fields = {};
+    function field(key, label, type, auto, ph, extra) {
+      f.appendChild(el("label", { class: "f", for: "c_" + key, text: label }));
+      var attrs = { id: "c_" + key, type: type, autocomplete: auto, placeholder: ph || "" };
+      for (var k in extra || {}) attrs[k] = extra[k];
+      fields[key] = el("input", attrs);
+      f.appendChild(fields[key]);
+    }
+    field("name", "Your name", "text", "name");
+    field("phone", "Mobile", "tel", "tel", "04xx xxx xxx");
+    field("postcode", "Postcode", "text", "postal-code", "e.g. 3123", { inputmode: "numeric", maxlength: "4" });
+
+    f.appendChild(el("label", { class: "f", for: "c_time", text: "Best time to call" }));
+    var time = el("select", { id: "c_time" }, ["Any time", "Morning", "Afternoon", "After 5pm"].map(function (t) { return el("option", { text: t }); }));
+    f.appendChild(time);
+
+    var hp = el("input", { type: "text", name: "website", tabindex: "-1", autocomplete: "off", "aria-hidden": "true" });
+    f.appendChild(el("div", { class: "hp" }, [hp]));
+
+    var consent = el("input", { type: "checkbox", id: "c_consent" });
+    f.appendChild(el("label", { class: "consent", for: "c_consent" }, [consent,
+      el("span", {}, ["I agree to " + C.company + " and its installation partner contacting me by phone, SMS and email about solar and a battery for my home. I can opt out at any time. See our ",
+        el("a", { href: "privacy.html", target: "_blank", rel: "noopener", text: "privacy policy" }), "."])]));
+
+    var err = el("p", { class: "err" });
+    var btn = el("button", { class: "btn", type: "submit", text: "Call me back" });
+    f.appendChild(err); f.appendChild(btn);
+    f.appendChild(el("p", { class: "fine" }, ["Prefer to see your numbers first? ",
+      el("a", { href: "./?" + adTag() + "-quiz", text: "Do the 60-second savings check" }), "."]));
+    f.addEventListener("focusin", function () { track("form-started"); });
+
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = fields.name.value.trim(), phone = fields.phone.value.replace(/[\s()-]/g, ""), pc = fields.postcode.value.trim();
+      var n = parseInt(pc, 10);
+      if (name.length < 2) return (err.textContent = "Please enter your name.");
+      if (!/^(\+?61|0)[2-478]\d{8}$/.test(phone)) return (err.textContent = "Please enter a valid Australian phone number.");
+      if (!/^\d{4}$/.test(pc)) return (err.textContent = "Please enter a 4-digit postcode.");
+      if (!((n >= 3000 && n <= 3999) || (n >= 8000 && n <= 8999))) return (err.textContent = "Sorry, we only install in Victoria at the moment.");
+      if (!consent.checked) return (err.textContent = "Please tick the box so we're allowed to contact you.");
+      err.textContent = ""; btn.disabled = true; btn.textContent = "Sending…";
+      phone = phone.replace(/^\+?61/, "0");
+      phone = phone.charAt(1) === "4"
+        ? phone.slice(0, 4) + " " + phone.slice(4, 7) + " " + phone.slice(7)
+        : phone.slice(0, 2) + " " + phone.slice(2, 6) + " " + phone.slice(6);
+      var blank = "";
+      var lead = {
+        id: "L" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        createdAt: new Date().toISOString(),
+        type: "callback", name: name, phone: phone, email: blank, bestDay: "As soon as possible", bestTime: time.value,
+        customerNote: "Call-back request. No quiz answers, so ask about their bill, roof and any existing solar.",
+        business: blank, postcode: pc, score: 50, grade: "Warm",
+        ownership: blank, hasSolar: blank, quarterlyBill: blank, bizSpend: blank, roof: blank, storeys: blank, phase: blank,
+        solarSize: blank, solarAge: blank, inverter: blank, daytime: blank, extras: blank, timeframe: blank, income: blank,
+        estSolarKw: blank, estBatteryKwh: blank, estSavings: blank, estNetCost: blank, estPayback: blank,
+        consent: "yes", source: adTag(), status: "New", notes: "", website: hp.value
+      };
+      saveLead(lead).then(function () { trail.push("thanks"); render(); })
+        .catch(function () {
+          btn.disabled = false; btn.textContent = "Try again";
+          err.textContent = "Sorry, that didn't send. Please try again" + (C.phone ? " or call " + C.phone + "." : ".");
+        });
+    });
+    app.appendChild(f);
+  }
+
   function saveLead(lead) {
     if (C.webhookUrl) {
       // text/plain keeps this a "simple" request, which Google Apps Script accepts cross-site.
@@ -456,5 +531,6 @@
   }
 
   window.SLApp = { answers: a };
-  go("type");
+  if (/^(fb|test)-callback$/.test(adTag())) { trail.push("callback"); track("callback"); renderCallback(); }
+  else go("type");
 })();
