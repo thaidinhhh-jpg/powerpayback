@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /dashboard.html
+
+Sitemap: https://getpowerpayback.com/sitemap.xml
